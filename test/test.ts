@@ -31,7 +31,7 @@ describe("whitelist", () => {
         
         console.log("Candy Machine Object created: "+candymachine_object)
         const moveCallMintTxn = await signer.executeMoveCall({
-            packageObjectId: '0xe13503ccfc7ea759c52a6944dc016bf12a1f2110',
+            packageObjectId: '0x9a69f15508a7293f639da0a99206f2526bd03642',
             module: 'candymachine',
             function: 'mint_nft',
             typeArguments: [],
