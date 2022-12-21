@@ -1,0 +1,46 @@
+{
+  "name": "mokshya",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./lib/index.js",
+  "scripts": {
+    "create_candy": "ts-node src/index.ts create_candy",
+    "audit": "lerna run audit --stream",
+    "audit:depcheck": "lerna run audit:depcheck --stream",
+    "audit:npm-check-updates": "npx npm-check-updates --errorLevel 1",
+    "build": "tsc -p .",
+    "create": "npm run build",
+    "local": "sudo npm uninstall -g && sudo npm install -g && mokshya",
+    "npm:format": "npx prettier-package-json --write package.json",
+    "npm:upgrade": "npx npm-check-updates -iu",
+    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
+    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "test": "sudo npm i -g && mokshya"
+  },
+  "bin": {
+    "mokshya": "./lib/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mysten/sui.js": "^0.20.0",
+    "fs": "^0.0.1-security",
+    "patch-package": "^6.5.0",
+    "random-seed": "^0.3.0",
+    "tweetnacl": "^1.0.3",
+    "chalk": "^5.1.2",
+    "clear": "^0.1.0",
+    "commander": "^9.4.1",
+    "dotenv": "16.0.1",
+    "figlet": "^1.5.2",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/clear": "^0.1.2",
+    "@types/node": "18.6.2",
+    "npm-run-all": "4.1.5",
+    "ts-node": "10.9.1",
+    "typescript": "4.8.2"
+  }
+}

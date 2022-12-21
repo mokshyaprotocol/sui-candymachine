@@ -6,6 +6,9 @@ module candymachine::candymachine {
     use std::bit_vector::{Self,BitVector};
     use sui::object::{Self, UID};
     use sui::transfer;
+    use sui::sui::SUI;
+    use sui::balance::{Balance};
+    use sui::coin::{Self, Coin};
     use sui::tx_context::{Self, TxContext};
 
     const EINVALID_ROYALTY_NUMERATOR_DENOMINATOR: u64 = 3;
@@ -69,7 +72,7 @@ module candymachine::candymachine {
         transfer::transfer(candymachine, tx_context::sender(ctx));
     }
 
-    public entry fun mint_nft(candymachine: &mut CandyMachine,ctx: &mut TxContext){
+    public entry fun mint_nft(coin: Coin<SUI>,candymachine: &mut CandyMachine,ctx: &mut TxContext){
         let remaining = candymachine.total_supply - candymachine.minted;
         let random_index = pseudo_random(tx_context::sender(ctx),remaining);
         let required_position=0; // the number of unset 
@@ -112,6 +115,7 @@ module candymachine::candymachine {
         string::append(&mut token_name,string::utf8(b" #"));
         string::append(&mut token_name,num_str(mint_position));
         string::append(&mut baseuri,string::utf8(b".json"));
+        send_balance(coin::into_balance(coin),candymachine.royalty_payee_address,ctx);
         sui::devnet_nft::mint(*string::bytes(&candymachine.collection_name),*string::bytes(&candymachine.collection_description),*string::bytes(&token_name),ctx);
     }
     public fun create_bit_mask(nfts: u64): vector<BitVector>
@@ -210,11 +214,14 @@ module candymachine::candymachine {
         };
         return j
     }
+    fun send_balance(balance: Balance<SUI>, to: address, ctx: &mut TxContext) {
+        transfer::transfer(coin::from_balance(balance, ctx), to)
+    }
 }
 
 #[test_only]
 module sui::candymchineTests {
-    use candymachine::candymachine::{Self,CandyMachine};
+    use candymachine::candymachine::{Self};
     use sui::test_scenario;
     use std::string;
     // use sui::tx_context;
@@ -246,12 +253,12 @@ module sui::candymchineTests {
                 test_scenario::ctx(scenario)
             )
         };
-        test_scenario::next_tx(scenario, admin);
-        {
-            let candy = test_scenario::take_from_sender<CandyMachine>(scenario);
-            candymachine::mint_nft(&mut candy,test_scenario::ctx(scenario));
-            test_scenario::return_to_sender(scenario, candy)
-        };
+        // test_scenario::next_tx(scenario, admin);
+        // {
+        //     let candy = test_scenario::take_from_sender<CandyMachine>(scenario);
+        //     candymachine::mint_nft(&mut candy,test_scenario::ctx(scenario));
+        //     test_scenario::return_to_sender(scenario, candy)
+        // };
         test_scenario::end(scenario_val);
     }
 }

@@ -7,7 +7,7 @@ describe("whitelist", () => {
         const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
         const signer = new RawSigner(bob, provider);
         const moveCallTxn = await signer.executeMoveCall({
-            packageObjectId: '0xe13503ccfc7ea759c52a6944dc016bf12a1f2110',
+            packageObjectId: '0x9a69f15508a7293f639da0a99206f2526bd03642',
             module: 'candymachine',
             function: 'init_candy',
             typeArguments: [],
